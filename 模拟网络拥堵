@@ -1,0 +1,21 @@
+// 1. 设置全局Gas Price（模拟拥堵）
+await ethers.provider.send("hardhat_setGasPrice", [ethers.parseUnits("100", "gwei").toHexString()]);
+
+// 2. 恢复默认Gas Price
+await ethers.provider.send("hardhat_setGasPrice", [ethers.parseUnits("1", "gwei").toHexString()]);
+
+// 3. 设置区块打包间隔（30秒，模拟确认延迟）
+await ethers.provider.send("evm_setIntervalMining", [30000]);
+
+// 4. 恢复即时打包
+await ethers.provider.send("evm_setIntervalMining", [0]);
+
+// 5. 获取当前Gas Price
+const gasPrice = await ethers.provider.getGasPrice();
+console.log("当前Gas Price：", ethers.formatUnits(gasPrice, "gwei"), "Gwei");
+
+// 6. 发起交易时手动指定Gas Price/Gas Limit
+await dex.connect(testUser).swapTokenToETH(ethers.parseUnits("1", 18), {
+  gasPrice: ethers.parseUnits("100", "gwei"), // 手动指定Gas Price
+  gasLimit: 300000 // 手动指定Gas Limit，避免Gas不足
+});
