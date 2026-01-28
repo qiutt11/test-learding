@@ -1,0 +1,17 @@
+1、gas不足
+npx hardhat test --gas-limit 100000
+
+2. 模拟区块回滚：测试中手动回滚到指定区块，验证交易撤销后状态恢复
+await network.provider.send("hardhat_reset",[
+{forking:{jsonRpcUrl:"https://sepolia.infura.io/v3/xxx",blockNumber:123456}}
+]);
+
+3. 模拟节点宕机/网络中断：测试中暂停节点，中断交易确认
+await network.provider.send("hardhat_stop");
+
+4. 模拟交易插队：修改交易nonce，构造重复nonce交易，导致前一笔被覆盖
+await network.provider.send("hardhat_setNonce", [wallet.address, 10]);
+
+# Python调用Hardhat RPC，修改目标链区块时间（增加1小时，触发超时）
+w3_target.provider.make_request("evm_increaseTime", [3600])
+w3_target.provider.make_request("evm_mine", [])  # 挖矿，确认时间修改
