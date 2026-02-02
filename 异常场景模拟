@@ -26,3 +26,6 @@ await hre.network.provider.send("evm_mine", [pastTime]);
 
 // 6. （可选）回滚到当前时间
 await hre.network.provider.send("evm_mine", [currentTime]);
+
+若要在本地模拟 pending 状态，需启动节点时关闭自动挖矿：npx hardhat node --no-mining，
+此时交易会处于 pending，手动执行 evm_mine 命令才会打包交易。
