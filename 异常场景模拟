@@ -15,3 +15,14 @@ await network.provider.send("hardhat_setNonce", [wallet.address, 10]);
 # Python调用Hardhat RPC，修改目标链区块时间（增加1小时，触发超时）
 w3_target.provider.make_request("evm_increaseTime", [3600])
 w3_target.provider.make_request("evm_mine", [])  # 挖矿，确认时间修改
+
+快照生成和回滚
+hre.network.provider.send("evm_snapshot");
+// 调用 evm_revert 回滚到之前保存的快照
+await hre.network.provider.send("evm_revert", [snapshotId]);
+
+// 3. 调用 evm_mine 挖矿，生成指定时间的历史区块（伪造历史时间）
+await hre.network.provider.send("evm_mine", [pastTime]);
+
+// 6. （可选）回滚到当前时间
+await hre.network.provider.send("evm_mine", [currentTime]);
